@@ -36,8 +36,8 @@ This project is a **Breast Cancer Prediction System** that consists of:
 ## 🚀 Installation & Setup
 ### **1️⃣ Clone the Repository**
 ```sh
-git clone https://github.com/your-repo.git
-cd your-repo
+git https://github.com/s4hil/breast-cancer-detection
+cd breast-cancer-detection
 ```
 
 ### **2️⃣ Install Dependencies**
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 ### **3️⃣ Train the Model (Optional)**
 If you want to retrain the model, navigate to the `model/` directory and run:
 ```sh
-python train_model.py
+python generate_model.py
 ```
 This will create `best_model.pkl`, `scaler.pkl`, and `model_details.json` inside `model/`.
 
@@ -152,16 +152,6 @@ The app will be available at: `http://127.0.0.1:5000/`
 - **Machine Learning** (Decision Tree, SVM, KNN, Naive Bayes)
 - **Bootstrap** (UI Styling)
 - **HTML, CSS, JavaScript** (Frontend)
-
----
-
-## 🤝 Contributing
-Want to improve this project? Feel free to fork the repo and submit a pull request!
-
-```sh
-git clone https://github.com/your-repo.git
-cd your-repo
-```
 
 ---
 
