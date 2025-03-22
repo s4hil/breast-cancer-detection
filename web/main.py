@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pickle
 import json
+import cv2
 from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 
@@ -31,6 +32,13 @@ UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+def extract_features_from_image(image_path):
+    """Extracts features from a breast scan image using OpenCV."""
+    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    resized_image = cv2.resize(image, (50, 50))
+    features = resized_image.flatten()[:30]
+    return np.array(features).reshape(1, -1)
+
 @app.route("/api/predict", methods=["POST"])
 def predict():
     """Predict cancer diagnosis based on JSON input and return confidence score."""
@@ -43,7 +51,7 @@ def predict():
         features_scaled = scaler.transform(features)
 
         prediction = model.predict(features_scaled)
-        confidence = model.predict_proba(features_scaled).max()  # Get the confidence score
+        confidence = model.predict_proba(features_scaled).max()
         diagnosis = "Malignant" if prediction[0] == 1 else "Benign"
 
         feature_values = dict(zip(FEATURE_NAMES, features.tolist()[0]))
@@ -72,11 +80,10 @@ def upload_scan():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
 
-        # TODO: Extract features from the image (placeholder for actual implementation)
-        extracted_features = np.random.rand(1, 30)
+        extracted_features = extract_features_from_image(file_path)
         features_scaled = scaler.transform(extracted_features)
         prediction = model.predict(features_scaled)
-        confidence = model.predict_proba(features_scaled).max()  # Get the confidence score
+        confidence = model.predict_proba(features_scaled).max()
         diagnosis = "Malignant" if prediction[0] == 1 else "Benign"
 
         feature_values = dict(zip(FEATURE_NAMES, extracted_features.tolist()[0]))
@@ -95,6 +102,11 @@ def upload_scan():
 def get_uploaded_file(filename):
     """Retrieve an uploaded file by filename."""
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route("/api/model-info", methods=["GET"])
+def model_info():
+    """Retrieve model details."""
+    return jsonify(model_details)
 
 if __name__ == "__main__":
     app.run(debug=True)

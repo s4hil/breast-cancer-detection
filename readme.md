@@ -4,6 +4,7 @@
 This project is a **Breast Cancer Prediction System** that consists of:
 - A **machine learning model** trained to classify breast cancer as **Malignant (M)** or **Benign (B)**.
 - A **Flask web application** that allows users to predict breast cancer using either JSON data or uploaded breast scans.
+- **Feature extraction** from breast scan images using **OpenCV**.
 
 ---
 
@@ -25,7 +26,8 @@ This project is a **Breast Cancer Prediction System** that consists of:
 │   ├── uploads/         # Uploaded breast scan images
 │   ├── app.py           # Flask API and Web Server
 │   ├── requirements.txt # Python dependencies
-│   └── static/          # CSS, JS, and other static files
+│   ├── static/          # CSS, JS, and other static files
+│   └── utils.py         # Feature extraction with OpenCV
 │
 ├── README.md     # Project documentation
 └── requirements.txt # Dependencies for the project
@@ -36,7 +38,7 @@ This project is a **Breast Cancer Prediction System** that consists of:
 ## 🚀 Installation & Setup
 ### **1️⃣ Clone the Repository**
 ```sh
-git https://github.com/s4hil/breast-cancer-detection
+git clone https://github.com/s4hil/breast-cancer-detection
 cd breast-cancer-detection
 ```
 
@@ -49,7 +51,7 @@ pip install -r requirements.txt
 ### **3️⃣ Train the Model (Optional)**
 If you want to retrain the model, navigate to the `model/` directory and run:
 ```sh
-python generate_model.py
+python train_model.py
 ```
 This will create `best_model.pkl`, `scaler.pkl`, and `model_details.json` inside `model/`.
 
@@ -70,12 +72,17 @@ The app will be available at: `http://127.0.0.1:5000/`
 ✅ **Web UI with Bootstrap Styling**  
 ✅ **Displays Prediction Accuracy and Extracted Features**  
 ✅ **File Upload Support** for image-based predictions  
+✅ **Feature Extraction with OpenCV** for image analysis  
 
 ---
 
 ## 📌 API Endpoints
-### **🔹 Homepage**
-- **`GET /`** → Renders the home page.
+| Endpoint          | Method | Description |
+|------------------|--------|-------------|
+| `/`              | GET    | Renders the home page |
+| `/model-info`    | GET    | Renders model details |
+| `/api/predict`   | POST   | Accepts JSON input with 30 features and returns the cancer diagnosis |
+| `/upload`        | POST   | Uploads a breast scan image and predicts if cancer is Malignant or Benign |
 
 ### **🔹 JSON Prediction API**
 - **`POST /api/predict`** → Accepts JSON input with 30 features and returns the cancer diagnosis.
@@ -148,14 +155,14 @@ The app will be available at: `http://127.0.0.1:5000/`
 ---
 
 ## 🛠 Technologies Used
-- **Python** (Flask, NumPy, Pandas, Scikit-Learn)
-- **Machine Learning** (Decision Tree, SVM, KNN, Naive Bayes)
+- **Python** (Flask, NumPy, Pandas, Scikit-Learn, OpenCV)
+- **Machine Learning** (SVM, Decision Tree, KNN, Naive Bayes)
 - **Bootstrap** (UI Styling)
 - **HTML, CSS, JavaScript** (Frontend)
 
 ---
 
-## 📜 License
+## 🐟 License
 This project is **open-source** and available under the [MIT License](LICENSE).
 
 ---
