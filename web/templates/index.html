@@ -41,10 +41,11 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 document.getElementById("jsonResult").innerHTML = `
                     <div class="alert alert-info">
                         <strong>Diagnosis:</strong> ${data.diagnosis}<br>
-                        <strong>Accuracy:</strong> ${data.accuracy}%
+                        <strong>Accuracy:</strong> ${data.accuracy}<br>
                     </div>
                 `;
             })

@@ -12,7 +12,7 @@
         "gamma": "scale",
         "kernel": "rbf",
         "max_iter": -1,
-        "probability": false,
+        "probability": true,
         "random_state": null,
         "shrinking": true,
         "tol": 0.001,

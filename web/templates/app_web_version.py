@@ -71,7 +71,8 @@ def predict():
 
         return jsonify({
             "diagnosis": diagnosis,
-            "input_data": request.form if not request.is_json else data
+            "input_data": request.form if not request.is_json else data,
+            "accuracy": str(best_accuracy * 100)[:5]
         })
 
     except Exception as e:
@@ -94,13 +95,11 @@ def api_predict():
 
         return jsonify({
             "diagnosis": diagnosis,
-            "input_data": data
+            "accuracy": best_accuracy
         })
 
     except Exception as e:
         return jsonify({"error": str(e)})
-
-
 
 
 @app.route("/upload", methods=["POST"])

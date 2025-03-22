@@ -12,7 +12,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
-# Create model directory if not exists
 model_dir = "../model/"
 os.makedirs(model_dir, exist_ok=True)
 
@@ -40,7 +39,7 @@ with open(os.path.join(model_dir, "scaler.pkl"), "wb") as f:
 # Define Models
 models = [
     ('Decision Tree', DecisionTreeClassifier()),
-    ('SVM', SVC()),
+    ('SVM', SVC(probability=True)),
     ('Naive Bayes', GaussianNB()),
     ('KNN', KNeighborsClassifier())
 ]
