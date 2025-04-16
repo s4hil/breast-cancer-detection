@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results | BreastcareAI</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/themes.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <span>BreastcareAI</span>
+        </div>
+        <div class="navbar-actions">
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+          </button>
+          <button
+            id="model-details-toggle"
+            class="btn btn-secondary"
+            onclick="fetchModelDetails()"
+          >
+            <i class="fas fa-info-circle"></i> Model Details
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <div id="model-details-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeModelDetails()">&times;</span>
+        <h2>Model Details</h2>
+        <div id="model-details-container">
+          <!-- Model details will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <main class="container" style="display: flex;">
+      <div class="card" style="flex: 1; margin-right: 2rem;">
+        <div class="card-header">
+          <h2>Diagnosis Results</h2>
+        </div>
+        <div class="card-body w-full">
+          <div class="image-preview" style="text-align: center; margin-bottom: 1.5rem;">
+            <img
+              src="{{ url_for('serve_upload', filename=file_path.split('/')[-1]) }}"
+              alt="Breast Scan"
+              style="max-width: 100%; max-height: 300px; border-radius: 8px;"
+            />
+          </div>
+
+          <div
+            class="diagnosis-result {{ 'diagnosis-malignant' if diagnosis == 'Malignant' else 'diagnosis-benign' }}"
+          >
+            {{ diagnosis }}
+          </div>
+
+          <div class="result-details">
+            <p><strong>Confidence:</strong> {{ confidence }}%</p>
+            <p><strong>Model Accuracy:</strong> {{ accuracy }}%</p>
+          </div>
+
+          <a href="/" class="btn btn-primary" style="margin-top: 1.5rem">
+            <i class="fas fa-arrow-left"></i> New Analysis
+          </a>
+        </div>
+      </div>
+
+      {% if deepseek %}
+      <div class="card mt-4 border-{{ deepseek.alert_color }}">
+        <div class="card-header bg-{{ deepseek.alert_color }} text-white">
+          DeepSeek Analytics
+        </div>
+        <div class="card-body">
+          <p><strong>Severity:</strong> {{ deepseek.severity }}</p>
+          <p><strong>Confidence Analysis:</strong> {{ deepseek.confidence_comment }}</p>
+          <p><strong>Model Accuracy:</strong> {{ deepseek.accuracy_comment }}</p>
+          <p><strong>Suggested Action:</strong> <em>{{ deepseek.suggested_action }}</em></p>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+
+    <footer>
+      <p>© 2025 BreastcareAI | Medical Diagnostic System</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script>
+      function fetchModelDetails() {
+        const modal = document.getElementById('model-details-modal');
+        const container = document.getElementById('model-details-container');
+
+        fetch('/static/model/model-details.json')
+          .then((response) => response.json())
+          .then((data) => {
+            container.innerHTML = `
+              <p><strong>Model Name:</strong> ${data.name}</p>
+              <p><strong>Version:</strong> ${data.version}</p>
+              <p><strong>Accuracy:</strong> ${data.accuracy}%</p>
+              <p><strong>Description:</strong> ${data.description}</p>
+            `;
+            modal.style.display = 'block';
+          })
+          .catch((error) => {
+            container.innerHTML = '<p style="color: red;">Failed to load model details.</p>';
+            modal.style.display = 'block';
+            console.error('Error fetching model details:', error);
+          });
+      }
+
+      function closeModelDetails() {
+        document.getElementById('model-details-modal').style.display = 'none';
+      }
+    </script>
+
+    <style>
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 90%;
+        text-align: center;
+        position: relative;
+      }
+
+      .modal-content .close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    </style>
+  </body>
+</html>
